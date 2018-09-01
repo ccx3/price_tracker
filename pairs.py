@@ -43,12 +43,14 @@ if len(pairs) >= 1:
     inkyphat.set_colour("red")
     inkyphat.set_border(inkyphat.BLACK)
 
-    font = ImageFont.truetype(inkyphat.fonts.FredokaOne, 18)
+#    font = ImageFont.truetype(inkyphat.fonts.AmaticSCBold, 24)
+    oswald = os.path.abspath(os.path.dirname(__file__)) + "/fonts/Oswald-Regular.ttf"
+    font = ImageFont.truetype(oswald, 18)
 
     pair_time = datetime.datetime.fromtimestamp(
             int(pairs[0]['timestamp'])
             ).strftime('%Y-%m-%d %H:%M:%S')
-    inkyphat.text((5, 0), pair_time, inkyphat.RED, font=font)
+    inkyphat.text((5, 0), pair_time, inkyphat.BLACK, font=font)
 
     pos = 40
     for pair in pairs:
