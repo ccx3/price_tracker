@@ -33,6 +33,7 @@ _font = ImageFont.truetype(_font_loc, 18)
 _font_small = ImageFont.truetype(_font_loc, 10)
 
 print_text = part(ip.text, font=_font)
+print_small_text = part(ip.text, font=_font_small)
 
 _CENTER_V = ip.WIDTH / 2
 _CENTER_Y = ip.HEIGHT / 2
@@ -64,13 +65,14 @@ def get_pairs():
 
 pairs = get_pairs()
 
+# always output bottom rectangle
+ip.set_colour("black")
+ip.set_border(ip.BLACK)
+ip.rectangle((0, ip.HEIGHT-20, ip.WIDTH, ip.HEIGHT), fill=ip.BLACK)
+
 if len(pairs) >= 1:
 
-    ip.set_colour("black")
-    ip.set_border(ip.BLACK)
-
     ip.rectangle((0, 0, ip.WIDTH, 20), fill=ip.BLACK)
-    ip.rectangle((0, ip.HEIGHT-20, ip.WIDTH, ip.HEIGHT), fill=ip.BLACK)
     ip.line((0, ip.HEIGHT/2, ip.WIDTH, ip.HEIGHT/2), fill=ip.BLACK) # horizontal
     ip.line((_CENTER_V,0,_CENTER_V,84), fill=ip.BLACK) # vertical
 
@@ -112,5 +114,14 @@ if len(pairs) >= 1:
     ip.show()
 
 else:
-    print("Warning, no pairs found!")
+    no_pairs = "NO PAIRS FOUND!"
+    print_small_text(
+            _center_text(
+                no_pairs, 
+                (40,ip.HEIGHT-13), 
+                ip.WIDTH, 20), 
+            no_pairs, 
+            fill=ip.WHITE)
+    # And show it!
+    ip.show()
     sys.exit()
