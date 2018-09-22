@@ -27,4 +27,4 @@ NOTE: I stuck with black & white output. The red ink refresh rate was slower tha
     - Data supplied by 1forge.com
     - A tidy Verdana font from http://www.fontpalace.com/font-download/Verdana/
     
-    
+See [photo](./price_tracker.jpg) for how the prices are displayed.
