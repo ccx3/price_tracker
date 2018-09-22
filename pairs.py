@@ -24,7 +24,7 @@ except ImportError:
 
 ONEFORGE_SECRET=os.environ['ONEFORGE_SECRET']
 if len(ONEFORGE_SECRET) == 0:
-    exit("This script requires the environment veriable ONEFORGE_SECRET is set with a registered key")
+    exit("This script requires the environment variable ONEFORGE_SECRET is set with a registered key")
 
 import inkyphat as ip
 
