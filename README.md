@@ -36,7 +36,7 @@ The font used is from http://www.fontpalace.com/font-download/Verdana/
 ```cron
 */10 4-21 * * * python /path/to/price_tracker/pairs.py
 ```
-This particular one polls the https://1forge.com/forex-data-api site once every 10 minutes between 4 a.m. and 9 p.m.
+This particular one runs every 10 minutes between 4 a.m. and 9 p.m. Each time it is run, pairs.py will poll 1forge and update the prices shown on the display.
 * get an API key from https://1forge.com/forex-data-api and set an environment variable somewhere that the cron job can pick it up. I used /etc/environment and placed in it an entry like this: 
 ```bash
 export ONEFORGE_SECRET='1234567890ABC'
@@ -44,5 +44,5 @@ export ONEFORGE_SECRET='1234567890ABC'
 
 Here is how the tracker displays prices:
 
-<img src="./price_tracker.jpg" alt="photo" width="200"/>
+<p align="center"><img src="./price_tracker.jpg" alt="photo" width="200"/></p>
 
