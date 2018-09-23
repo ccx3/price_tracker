@@ -32,8 +32,15 @@ The font used is from http://www.fontpalace.com/font-download/Verdana/
 
 * The raspbian distro runs with Python 2.7 at the time of writing. I think pairs.py will run fine against the latest versions of Python 3.x since a quick test after running through 2to3 only showed the formatting strings were changed to lose the unicode marker.
 * install the inky-phat library per the instructions on their github repo at https://github.com/pimoroni/inky-phat
-* add a cron job using 'crontab -e', and adding a line like: */10 4-21 * * * python /path/to/price_tracker/pairs.py. This particular one polls the https://1forge.com/forex-data-api site once every 10 minutes between 4 a.m. and 9 p.m.
-* get an API key from https://1forge.com/forex-data-api and set an environment variable somewhere that the cron job can pick it up. I used /etc/environment and placed in it an entry like this: export ONEFORGE_SECRET='1234567890ABC'
+* add a cron job using 'crontab -e', and adding a line like: 
+```cron
+*/10 4-21 * * * python /path/to/price_tracker/pairs.py
+```
+This particular one polls the https://1forge.com/forex-data-api site once every 10 minutes between 4 a.m. and 9 p.m.
+* get an API key from https://1forge.com/forex-data-api and set an environment variable somewhere that the cron job can pick it up. I used /etc/environment and placed in it an entry like this: 
+```bash
+export ONEFORGE_SECRET='1234567890ABC'
+```
 
 Here is how the tracker displays prices:
 
