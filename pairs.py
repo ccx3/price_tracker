@@ -30,6 +30,7 @@ import inkyphat as ip
 
 _font_loc = os.path.abspath(os.path.dirname(__file__)) + "/fonts/Verdana.ttf"
 _font = ImageFont.truetype(_font_loc, 18)
+_font_medium = ImageFont.truetype(_font_loc, 14)
 _font_small = ImageFont.truetype(_font_loc, 10)
 
 print_text = part(ip.text, font=_font)
@@ -37,6 +38,7 @@ print_small_text = part(ip.text, font=_font_small)
 
 _CENTER_V = ip.WIDTH / 2
 _CENTER_Y = ip.HEIGHT / 2
+_OZ_TO_G_RATIO = 31.10348
 
 def _center_text(text,
         origin=(0,0),
@@ -66,7 +68,7 @@ def get_pairs():
 pairs = get_pairs()
 
 # always output bottom rectangle
-ip.set_colour("black")
+ip.set_colour("red")
 ip.set_border(ip.BLACK)
 ip.rectangle((0, ip.HEIGHT-20, ip.WIDTH, ip.HEIGHT), fill=ip.BLACK)
 
@@ -76,28 +78,37 @@ if len(pairs) >= 1:
     ip.line((0, ip.HEIGHT/2, ip.WIDTH, ip.HEIGHT/2), fill=ip.BLACK) # horizontal
     ip.line((_CENTER_V,0,_CENTER_V,84), fill=ip.BLACK) # vertical
 
-    hdg = "GOLD/OZ"
-    print_text(_center_text(hdg, (0,0), _CENTER_V, 20), hdg, fill=ip.WHITE)
+    hdg = "GOLD"
+    print_text(_center_text(hdg, (0,0), _CENTER_V, 15), hdg, fill=ip.WHITE)
 
-    hdg = "SILVER/OZ"
-    print_text(_center_text(hdg, (107,0), _CENTER_V, 20), hdg, fill=ip.WHITE)
+    hdg = "SILVER"
+    print_text(_center_text(hdg, (107,0), _CENTER_V, 15), hdg, fill=ip.WHITE)
 
     for pair in pairs:
         currency = pair['symbol'].lower()
         currency1, currency2 = (currency[:3],currency[3:])
+        price = round(pair['price'], 2)
 
         if currency == 'xauusd':
-            msg = u"${}".format(pair['price'])
-            print_text(_center_text(msg, (0,25), _CENTER_V, 32), msg, fill=ip.BLACK)
+            msg_oz = u"${}/oz".format(price)
+            msg_g = u"${}/g".format(round(price / _OZ_TO_G_RATIO, 2))
+            print_text((5, 21), msg_oz, fill=ip.BLACK, font=_font_medium)
+            print_text((5, 38), msg_g, fill=ip.RED, font=_font_small)
         elif  currency == 'xagusd':
-            msg = u"${}".format(pair['price'])
-            print_text(_center_text(msg, (110,25), _CENTER_V, 32), msg, fill=ip.BLACK)
+            msg_oz = u"${}/oz".format(price)
+            msg_g = u"${}/g".format(round(price / _OZ_TO_G_RATIO, 2))
+            print_text((110, 21), msg_oz, fill=ip.BLACK, font=_font_medium)
+            print_text((110, 38), msg_g, fill=ip.RED, font=_font_small)
         elif  currency == 'xaugbp':
-            msg = u"£{}".format(pair['price'])
-            print_text(_center_text(msg, (0,55), _CENTER_V, 32), msg, fill=ip.BLACK)
+            msg_oz = u"£{}/oz".format(price)
+            msg_g = u"£{}/g".format(round(price / _OZ_TO_G_RATIO, 2))
+            print_text((5, 53), msg_oz, fill=ip.BLACK, font=_font_medium)
+            print_text((5, 70), msg_g, fill=ip.RED, font=_font_small)
         elif  currency == 'xaggbp':
-            msg = u"£{}".format(pair['price'])
-            print_text(_center_text(msg, (110,55), _CENTER_V, 32), msg, fill=ip.BLACK)
+            msg_oz = u"£{}/oz".format(price)
+            msg_g = u"£{}/g".format(round(price / _OZ_TO_G_RATIO, 2))
+            print_text((110, 53), msg_oz, fill=ip.BLACK, font=_font_medium)
+            print_text((110, 70), msg_g, fill=ip.RED, font=_font_small)
 
     pair_time = datetime.datetime.fromtimestamp(
             int(pairs[0]['timestamp'])
