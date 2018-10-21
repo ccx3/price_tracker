@@ -28,6 +28,10 @@ if len(ONEFORGE_SECRET) == 0:
 
 import inkyphat as ip
 
+#_hicolor = ip.RED
+#_hicolor = ip.YELLOW
+_hicolor = ip.BLACK
+
 _font_loc = os.path.abspath(os.path.dirname(__file__)) + "/fonts/Verdana.ttf"
 _font = ImageFont.truetype(_font_loc, 18)
 _font_medium = ImageFont.truetype(_font_loc, 14)
@@ -93,22 +97,22 @@ if len(pairs) >= 1:
             msg_oz = u"${}/oz".format(price)
             msg_g = u"${}/g".format(round(price / _OZ_TO_G_RATIO, 2))
             print_text((5, 21), msg_oz, fill=ip.BLACK, font=_font_medium)
-            print_text((5, 38), msg_g, fill=ip.RED, font=_font_small)
+            print_text((5, 38), msg_g, fill=_hicolor, font=_font_small)
         elif  currency == 'xagusd':
             msg_oz = u"${}/oz".format(price)
             msg_g = u"${}/g".format(round(price / _OZ_TO_G_RATIO, 2))
             print_text((110, 21), msg_oz, fill=ip.BLACK, font=_font_medium)
-            print_text((110, 38), msg_g, fill=ip.RED, font=_font_small)
+            print_text((110, 38), msg_g, fill=_hicolor, font=_font_small)
         elif  currency == 'xaugbp':
             msg_oz = u"£{}/oz".format(price)
             msg_g = u"£{}/g".format(round(price / _OZ_TO_G_RATIO, 2))
             print_text((5, 53), msg_oz, fill=ip.BLACK, font=_font_medium)
-            print_text((5, 70), msg_g, fill=ip.RED, font=_font_small)
+            print_text((5, 70), msg_g, fill=_hicolor, font=_font_small)
         elif  currency == 'xaggbp':
             msg_oz = u"£{}/oz".format(price)
             msg_g = u"£{}/g".format(round(price / _OZ_TO_G_RATIO, 2))
             print_text((110, 53), msg_oz, fill=ip.BLACK, font=_font_medium)
-            print_text((110, 70), msg_g, fill=ip.RED, font=_font_small)
+            print_text((110, 70), msg_g, fill=_hicolor, font=_font_small)
 
     pair_time = datetime.datetime.fromtimestamp(
             int(pairs[0]['timestamp'])
