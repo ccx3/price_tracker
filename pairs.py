@@ -28,9 +28,9 @@ if len(ONEFORGE_SECRET) == 0:
 
 import inkyphat as ip
 
-#_hicolor = ip.RED
-#_hicolor = ip.YELLOW
-_hicolor = ip.BLACK
+#_HICOLOR = ip.RED
+#_HICOLOR = ip.YELLOW
+_HICOLOR = ip.BLACK
 
 _font_loc = os.path.abspath(os.path.dirname(__file__)) + "/fonts/Verdana.ttf"
 _font = ImageFont.truetype(_font_loc, 18)
@@ -42,7 +42,36 @@ print_small_text = part(ip.text, font=_font_small)
 
 _CENTER_V = ip.WIDTH / 2
 _CENTER_Y = ip.HEIGHT / 2
+
+# find out if the user specified the units on the command line
+_GMOZ = 'gm' # default unit of weight
+if len(sys.argv) > 1:
+    if sys.argv[1].lower() == 'oz': # The only valid override value
+        _GMOZ = 'oz'
+
 _OZ_TO_G_RATIO = 31.10348
+
+def make_metal_msg(pair, price):
+    """Make a displayable message.
+
+    Note we assume only gold or silver is sent to this method.
+    Note that if _GMOZ == 'gm' we dispolay the price per gram.
+    Any other value is interpreted as an instruction to display
+    the price per troy ounce.
+    """
+    if pair.endswith('usd'):
+        msg = u"${0:.2f}"
+    else:
+        msg = u"£{0:.2f}"
+
+    if _GMOZ == 'gm':
+        price = round(price / _OZ_TO_G_RATIO, 2)
+    else:
+        price = round(price, 2)
+
+    msg = msg.format(price)
+
+    return msg
 
 def _center_text(text,
         origin=(0,0),
@@ -60,7 +89,7 @@ def _center_text(text,
     y = (starty + (height/2)) - (h/2)
     return (x,y)
 
-def get_pairs():
+def get_prices():
     "Returns currency-pairs (inc gold price in specified currency)."
 
     uri = "https://forex.1forge.com/1.0.3/quotes?pairs=XAUUSD,XAUGBP,XAGUSD,XAGGBP&api_key=" + ONEFORGE_SECRET
@@ -69,60 +98,48 @@ def get_pairs():
     json_data = json.loads(res.text) if(res.status_code==200) else {}
     return json_data
 
-pairs = get_pairs()
+prices = get_prices()
 
 # always output bottom rectangle
 ip.set_colour("red")
 ip.set_border(ip.BLACK)
 ip.rectangle((0, ip.HEIGHT-20, ip.WIDTH, ip.HEIGHT), fill=ip.BLACK)
 
-if len(pairs) >= 1:
+if len(prices) >= 1:
 
     ip.rectangle((0, 0, ip.WIDTH, 20), fill=ip.BLACK)
     ip.line((0, ip.HEIGHT/2, ip.WIDTH, ip.HEIGHT/2), fill=ip.BLACK) # horizontal
     ip.line((_CENTER_V,0,_CENTER_V,84), fill=ip.BLACK) # vertical
 
-    hdg = "GOLD"
-    print_text(_center_text(hdg, (0,0), _CENTER_V, 15), hdg, fill=ip.WHITE)
+    if _GMOZ == 'gm':
+        hdg = 'GOLD  (GM)  SILVER'
+    else:
+        hdg = 'GOLD  (OZ)  SILVER'
+    #print_text(_center_text(hdg, (0,0), _CENTER_V, 15), hdg, fill=ip.WHITE)
+    print_text(_center_text(hdg, (0,0), height=15), hdg, fill=ip.WHITE)
 
-    hdg = "SILVER"
-    print_text(_center_text(hdg, (107,0), _CENTER_V, 15), hdg, fill=ip.WHITE)
-
-    for pair in pairs:
-        currency = pair['symbol'].lower()
-        currency1, currency2 = (currency[:3],currency[3:])
-        price = round(pair['price'], 2)
+    for price_data in prices:
+        currency = price_data['symbol'].lower()
+        msg = make_metal_msg(currency, price_data['price'])
 
         if currency == 'xauusd':
-            msg_oz = u"${}/oz".format(price)
-            msg_g = u"${}/g".format(round(price / _OZ_TO_G_RATIO, 2))
-            print_text((5, 21), msg_oz, fill=ip.BLACK, font=_font_medium)
-            print_text((5, 38), msg_g, fill=_hicolor, font=_font_small)
+            print_text((5,25), msg, fill=_HICOLOR)
         elif  currency == 'xagusd':
-            msg_oz = u"${}/oz".format(price)
-            msg_g = u"${}/g".format(round(price / _OZ_TO_G_RATIO, 2))
-            print_text((110, 21), msg_oz, fill=ip.BLACK, font=_font_medium)
-            print_text((110, 38), msg_g, fill=_hicolor, font=_font_small)
+            print_text((110, 25), msg, fill=_HICOLOR)
         elif  currency == 'xaugbp':
-            msg_oz = u"£{}/oz".format(price)
-            msg_g = u"£{}/g".format(round(price / _OZ_TO_G_RATIO, 2))
-            print_text((5, 53), msg_oz, fill=ip.BLACK, font=_font_medium)
-            print_text((5, 70), msg_g, fill=_hicolor, font=_font_small)
+            print_text((5,55), msg, fill=_HICOLOR)
         elif  currency == 'xaggbp':
-            msg_oz = u"£{}/oz".format(price)
-            msg_g = u"£{}/g".format(round(price / _OZ_TO_G_RATIO, 2))
-            print_text((110, 53), msg_oz, fill=ip.BLACK, font=_font_medium)
-            print_text((110, 70), msg_g, fill=_hicolor, font=_font_small)
+            print_text((110,55), msg, fill=_HICOLOR)
 
-    pair_time = datetime.datetime.fromtimestamp(
-            int(pairs[0]['timestamp'])
+    price_data_time = datetime.datetime.fromtimestamp(
+            int(prices[0]['timestamp'])
             ).strftime('Updated: %-d %b %Y at %H:%M')
     print_text(
             _center_text(
-                pair_time, 
+                price_data_time, 
                 (40,ip.HEIGHT-13), 
                 ip.WIDTH, 20), 
-            pair_time, 
+            price_data_time, 
             fill=ip.WHITE, 
             font=_font_small)
     # And show it!
